@@ -1,12 +1,32 @@
-//
-//  main.swift
-//  commandLineTool
-//
-//  Created by Yuto Mizutani on 2016/09/16.
-//  Copyright © 2016年 Yuto Mizutani. All rights reserved.
-//
 
-import Foundation
+let inputLine = readLine()!
 
-print("Hello, World!")
+if let N = Int(inputLine){
+    print("\n" + String(N))
+    var strikeCount = 0
+    var ballCount = 0
+    
+    for i in 1 ... N - 1{
+        print(i)
+        let call = readLine()!
+        print("test:")
+        print(call)
+        
+        if call == "strike"{
+            print("strike!")
+            strikeCount += 1
+            if strikeCount == 3{
+                print("out!")
+            }
+        } else {
+            print("ball!")
+            ballCount += 1
+            if ballCount == 4{
+                print("fourball!")
+            }
+        }
 
+    }
+}
+print("end")
+        
