@@ -1,25 +1,25 @@
-class ICCard {
-    static let Deposit = 500
-    var money = 0
-    required init(charge: Int){
-        money = charge - ICCard.Deposit
+class Item{
+    var price: Double = 0
+    
+    //税込み価格
+    var intaxPrice: Double{
+        //値を取得するときに呼ばれる.
+        get{
+            return self.price*1.08
+        }
+        //値がセットされるときに呼ばれる
+        set(p){
+            price = p/1.08
+        }
     }
 }
 
-class Icocai: ICCard{
-    static var serial = 0
-    let idnumber: Int
-    
-    init(id: Int, money: Int){
-        idnumber = id
-        super.init(charge: money)
-    }
-    
-    required init(charge:Int){
-        idnumber = ++Icocai.serial
-        super.init(charge: charge)
-    }
-}
+var item = Item()
+item.intaxPrice = 108
+print("税抜価格",Int(item.price),"円")
+print("税込価格",Int(item.intaxPrice),"円")
 
-let a = Icocai(charge: 1000)
-print(a.money)
+var item2 = Item()
+item2.price = 200
+print("税抜価格",Int(item2.price),"円")
+print("税込価格",Int(item2.intaxPrice),"円")
