@@ -1,59 +1,58 @@
-protocol Personal {
-    var name: String {get}
-    init(name: String)
-    func sayHelloTo(p:Personal)
-    func saySomething() -> String //プロトコル側のメソッドの宣言にはメソッドメイト引数列,返り値の型のみ.ブロックは記述しない
-}
-enum Sex { case Male, Female}
-
-protocol HealthInfo: Personal{
-    var weight: Double { get set }
-    var height: Double { get set }
-    var sex: Sex? { get }
+protocol VectorType{
+    typealias Element
+    var x: Element { get set }
+    var y: Element { get set }
 }
 
-class Citizen: Personal {
-    let name: String
-    required init(name:String) {
-        self.name = name
-    }
-    func sayHelloTo(p:Personal){
-        print("どうも." + p.name + "さん")
-    }
-    func saySomething() -> String{
-        return "なるほど"
-    }
+protocol VectorUnsignedType {
+    typealias Element: UnsignedIntegerType//UIntなどの符号なし整数が適合する
+}
+struct VectorUInt: VectorType, VectorUnsignedType {
+    var x, y :UInt
 }
 
-struct Person: HealthInfo {
-    let name: String
-    let sex: Sex?
-    var weight = 0.0
-    var height = 0.0
-    init(name: String) {
-        self.name = name
-        sex = nil
+struct VectorFloat : VectorType {
+    var x, y: Float //具体的な型を指定
+    func convToDouble() -> VectorDouble{
+        return VectorDouble(x: VectorDouble.Element(x), y: VectorDouble.Element(y))
     }
-    init(name: String, sex:Sex){ // 新しいイニシャライザ
-        self.name = name
-        self.sex = sex
-    }
-    func sayHelloTo(p: Personal) {
-        if let w = p as? HealthInfo where self.sex == w.sex{
-            print("やあ," + p.name + ". ")
-        } else {
-            print("こんにちは.")
-        }
-    }
-    func saySomething() -> String {
-        return "すごいな"
+
+}
+
+struct VectorDouble : VectorType,CustomStringConvertible{
+    var x, y: Double
+    var  description: String { return "[\(x), \(y)]" }
+}
+
+protocol VectorIntegerType{
+    typealias Element: IntegerType //付属型に適合するプロトコルを指定
+    var x: Element { get set }
+    var y: Element { get set }
+}
+
+struct VectorGrade: VectorType {
+    enum Element {case A, B, C, D, X } //ネスト型を定義
+    var x, y: Element
+}
+
+struct VectorInt: VectorIntegerType {
+    var x, y: Int
+    mutating func add(x x:Int, y:Int){
+        self.x += x
+        self.y += y
     }
 }
 
-let sachi = Person(name: "幸", sex: Sex.Female)
-let yumi = Person(name: "由美子", sex: Sex.Female)
-let chiz = Citizen(name: "千鶴")
-sachi.sayHelloTo(yumi)
-sachi.sayHelloTo(chiz)
+struct VectorUInt16: VectorIntegerType {
+    var x, y: UInt16
+}
 
+//var a = VectorFloat(x: 10.0, y: 12.0)
+//print(a)
+//let b = a.convToDouble()
+//print(b)
 
+let mx: VectorInt.Element = 10
+var a = VectorInt(x: mx, y: -7)
+a.add(x: 10, y: 9)
+print(a)
