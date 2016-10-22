@@ -1,25 +1,31 @@
-class ICCard {
-    static let Deposit = 500
-    var money = 0
-    required init(charge: Int){
-        money = charge - ICCard.Deposit
+struct Ounce{
+    var ml:Double = 0.0
+    static let ouceUS = 29.5735
+    init(ounce:Double){
+        self.ounce = ounce
+    }
+    var ounce: Double {
+        get{
+            return ml / Ounce.ouceUS
+        }
+        set{
+            ml = newValue * Ounce.ouceUS
+        }
     }
 }
 
-class Icocai: ICCard{
-    static var serial = 0
-    let idnumber: Int
-    
-    init(id: Int, money: Int){
-        idnumber = id
-        super.init(charge: money)
-    }
-    
-    required init(charge:Int){
-        idnumber = ++Icocai.serial
-        super.init(charge: charge)
+extension Ounce:FloatLiteralConvertible{
+    init(floatLiteral value: Double){
+        self.init(ounce: value)
     }
 }
 
-let a = Icocai(charge: 1000)
-print(a.money)
+
+//var a = Ounce(ounce: 2.0)
+//print(a.ml)
+//a.ounce += 8.0
+//print(a.ounce)
+
+var a: Ounce
+a = 10.0
+print(a.ml)
